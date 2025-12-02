@@ -1,186 +1,160 @@
-
-### **README.md:**
-
 ```markdown
-# ⚡ Shades Circuits - Educational Examples
+# 📚 ZK Privacy Circuits - Educational Examples
 
-> **🎓 Learning Resource Only**  
-> These are **simplified, non-optimized** ZK circuits demonstrating basic privacy pool concepts. The actual Shades production circuits implement batched privacy operations, encrypted notes, and advanced constraint optimizations.
+> **Educational Purposes Only**  
+> A collection of simplified ZK circuits demonstrating basic privacy concepts. These examples are for learning and should not be used in production.
 
-## 🔍 Overview of Shades Architecture
+## 🎯 Purpose
 
-Shades implements a novel **batched privacy** system where multiple operations (deposit → transfer → withdraw) are proven in a single ZK circuit. This repository shows **simplified versions** of each component for educational purposes.
+This repository contains educational circuit examples to help developers understand:
+- Basic zero-knowledge proof constructions
+- Privacy-preserving transaction patterns
+- Merkle tree inclusion proofs
+- Circuit constraint systems
 
-## 🧩 What This Repository Contains
-
-**Educational implementations** of:
-- Basic deposit circuit (Poseidon commitment)
-- Simple withdrawal circuit (nullifier check)
-- Merkle tree inclusion proof
-- Public input constraints
-
-## 🚫 What's Missing (Production Features)
-
-The **real Shades circuits** implement:
-- ✅ `complete_private_flow()` circuit (deposit+transfer+withdraw in one)
-- ✅ Encrypted note constraints
-- ✅ Multi-asset support
-- ✅ Relayer fee mechanisms
-- ✅ Gas-optimized custom gates
-- ✅ Production security measures
-
-## 📊 Circuit Comparison
-
-| Aspect | Educational Version | Production Version |
-|--------|-------------------|-------------------|
-| Operations | Single operation | Batched operations |
-| Constraints | ~100 constraints | ~10,000 constraints |
-| Gas Cost | Not optimized | Highly optimized |
-| Features | Basic only | Complete privacy suite |
-
-## 📁 Repository Structure
+## 📁 Repository Contents
 
 ```
-shades-circuits-educational/
-├── circuits/
-│   ├── basic_deposit.circom      # Simple deposit (educational)
-│   ├── basic_withdraw.circom     # Simple withdraw (educational)
-│   ├── merkle_inclusion.circom   # Tree proof (simplified)
-│   └── utils/
-│       ├── poseidon.circom       # Hash function example
-│       └── bitify.circom         # Bit operations
-├── scripts/
-│   ├── compile_circuit.js        # Compilation script
-│   ├── generate_proof.js         # Proof generation
-│   └── test_circuit.js           # Basic testing
-├── artifacts/
-│   └── circuit_final.zkey        # Sample proving key
-└── docs/
-    ├── CIRCUIT_DESIGN.md         # Design principles
-    ├── CONSTRAINT_SYSTEM.md      # Constraint explanation
-    └── SECURITY.md               # Security considerations
+circuits/
+├── basic_deposit.circom      # Example deposit pattern
+├── basic_withdraw.circom     # Example withdrawal pattern
+└── utils/                    # Helper components
+scripts/
+├── compile_circuit.js        # Compilation utilities
+├── generate_proof.js         # Proof generation examples
+└── test_circuit.js           # Testing utilities
 ```
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ```bash
 # Install dependencies
 npm install
 
-# Compile educational circuit
-npm run compile:deposit
+# Compile an example circuit
+npm run compile:example
 
-# Generate test proof
-npm run proof:withdraw
-
-# Run tests
+# Run educational tests
 npm test
+
+# Generate example proof
+npm run proof:example
 ```
 
-## 📚 Example Circuit (Simplified)
+## 📖 Example Usage
 
 ```circom
-// EDUCATIONAL VERSION - Not for production
-template BasicDeposit() {
-    signal input secret;
-    signal input amount;
+// Example: Basic commitment circuit
+template ExampleCommitment() {
+    signal input data;
+    signal input salt;
     signal output commitment;
     
-    // Simplified hash (real circuit uses optimized Poseidon)
-    commitment <== secret + amount;
+    component hash = Poseidon(2);
+    hash.inputs[0] <== data;
+    hash.inputs[1] <== salt;
     
-    // Basic constraint
-    amount > 0;
+    commitment <== hash.out;
 }
 ```
 
-## ⚡ Real Shades Circuit Architecture
+## ⚠️ Important Notes
 
-The **actual Shades production circuit** implements:
+### Security Disclaimer
+**THESE CIRCUITS ARE NOT PRODUCTION-READY**
 
-```circom
-// REAL Shades Circuit Structure (conceptual):
-template CompletePrivateFlow() {
-    // Private inputs
-    signal input depositSecret;
-    signal input transferSecret;
-    signal input withdrawSecret;
-    signal input encryptedNote;
-    
-    // Public inputs
-    signal output finalNullifier;
-    signal output noteCommitment;
-    
-    // 1. Deposit proof
-    component deposit = AdvancedDeposit(depositSecret);
-    
-    // 2. Private transfer proof  
-    component transfer = StealthTransfer(
-        deposit.output,
-        transferSecret
-    );
-    
-    // 3. Withdraw proof with encrypted note
-    component withdraw = EncryptedWithdraw(
-        transfer.output,
-        withdrawSecret,
-        encryptedNote
-    );
-    
-    // 4. Consistency checks across all operations
-    // 5. Batch optimization constraints
-    // 6. Gas-efficient custom gates
-}
-```
+These examples:
+- Have not been security audited
+- Lack production optimizations
+- Are simplified for educational purposes
+- Should not be used with real assets
 
-## 🔬 Learning Path
+### Learning vs Production
+- 🎓 **Learning**: Study these examples to understand concepts
+- 🏭 **Production**: Use established, audited libraries
+- 🔒 **Security**: Always conduct professional audits for production use
 
-1. **Week 1**: Understand basic deposit/withdraw circuits
-2. **Week 2**: Learn Merkle tree inclusion proofs
-3. **Week 3**: Study constraint system design
-4. **Week 4**: Explore optimization techniques
-
-## 🧪 Testing the Circuits
+## 🧪 Testing
 
 ```bash
-# Run comprehensive tests
-npm run test:all
+# Run all educational tests
+npm test
 
-# Test specific circuit
-npm run test:deposit
+# Test specific circuit patterns
+npm run test:patterns
 
-# Generate test vectors
-npm run generate:vectors
+# Generate test coverage report
+npm run coverage
 ```
 
-## ⚠️ Critical Disclaimer
+## 🛠️ Development
 
-**DO NOT USE THESE CIRCUITS IN PRODUCTION**
+### Prerequisites
+- Node.js 16+
+- Basic understanding of zero-knowledge proofs
+- Familiarity with Circom syntax
 
-These circuits lack:
-- Security optimizations
-- Side-channel protections
-- Production-grade constraints
-- Formal verification
-- Audit trail
+### Setup
+```bash
+git clone https://github.com/your-org/circuits-educational.git
+cd circuits-educational
+npm install
+```
 
-## 📈 Next Steps for Learners
+### Building Examples
+```bash
+# Compile all examples
+npm run build
 
-After understanding these educational circuits:
-1. Read the [Shades Whitepaper](https://shades.org/whitepaper) for advanced concepts
-2. Study production ZK circuits from audited projects
-3. Take advanced ZK courses (0xPARC, ZK University)
-4. Contribute to open-source ZK projects
+# Compile specific circuit
+npm run compile:deposit
+```
 
-## 🤝 Community & Resources
+## 🔗 Additional Resources
 
-- [Discord](https://discord.gg/shades-circuit-chat) - Circuit design discussions
-- [GitHub Issues](https://github.com/shades-protocol/issues) - Educational questions
-- [ZK Resources](https://zk.shades.org) - Learning materials
+### Documentation
+- [Circom Official Documentation](https://docs.circom.io/)
+- [ZK Proof Concepts](https://zkproof.org/)
+- [Cryptography Fundamentals](https://crypto.stanford.edu/)
+
+### Learning Platforms
+- [0xPARC ZK Courses](https://0xparc.org/)
+- [ZK University](https://zku.one/)
+- [Cryptography MOOCs](https://www.coursera.org/courses?query=cryptography)
+
+### Community
+- [Zero Knowledge Podcast](https://zeroknowledge.fm/)
+- [ZK Research Forums](https://community.zkproof.org/)
+- [Cryptography Stack Exchange](https://crypto.stackexchange.com/)
+
+## 🤝 Contributing
+
+We welcome educational improvements:
+- Better documentation
+- More comprehensive examples
+- Additional test cases
+- Clearer explanations
+
+Please ensure contributions remain educational and don't include production secrets.
+
+### Contribution Guidelines
+1. Keep examples simple and educational
+2. Include thorough comments
+3. Add corresponding tests
+4. Update documentation
+5. Follow code style guidelines
 
 ## 📄 License
 
-Educational Community License - Free for learning, prohibited for commercial use.
-```
+MIT License - See [LICENSE](LICENSE) file for details.
+
+### Usage Restrictions
+- Free for educational and learning purposes
+- Commercial use requires additional permissions
+- No warranty or liability for any use
+
 
 ---
+
+
+```
