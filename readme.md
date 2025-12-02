@@ -1,8 +1,7 @@
-```markdown
 # 📚 ZK Privacy Circuits - Educational Examples
 
-> **Educational Purposes Only**  
-> A collection of simplified ZK circuits demonstrating basic privacy concepts. These examples are for learning and should not be used in production.
+ **Educational Purposes Only**  
+ A collection of simplified ZK circuits demonstrating basic privacy concepts. These examples are for learning and should not be used in production.
 
 ## 🎯 Purpose
 
@@ -14,8 +13,8 @@ This repository contains educational circuit examples to help developers underst
 
 ## 📁 Repository Contents
 
-```
-circuits/
+
+circuits-eductaional:starknet/
 ├── basic_deposit.circom      # Example deposit pattern
 ├── basic_withdraw.circom     # Example withdrawal pattern
 └── utils/                    # Helper components
@@ -23,7 +22,7 @@ scripts/
 ├── compile_circuit.js        # Compilation utilities
 ├── generate_proof.js         # Proof generation examples
 └── test_circuit.js           # Testing utilities
-```
+
 
 ## 🚀 Quick Start
 
