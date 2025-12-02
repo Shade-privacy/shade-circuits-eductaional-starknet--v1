@@ -1,74 +1,91 @@
-// Basic Withdrawal Circuit - Educational Example
-// NOT for production use - demonstrates concepts only
+// ⚠️ WARNING: Simplified for learning. NOT for production.
 
 pragma circom 2.1.6;
 
-include "node_modules/circomlib/circuits/poseidon.circom";
-include "node_modules/circomlib/circuits/bitify.circom";
+include "./utils/poseidon.circom";
+include "./utils/bitify.circom";
 
-template MerkleTreeInclusion(depth) {
-    // Public inputs
+// Educational merkle tree inclusion proof
+// Depth 4 for simplicity (production uses 20+)
+template MerkleInclusionProof(depth) {
+    signal input leaf;
     signal input root;
-    signal input nullifierHash;
-    
-    // Private inputs
-    signal input secret;
     signal input pathIndices[depth];
-    signal input pathElements[depth];
-    signal input leafIndex;
+    signal input siblings[depth];
     
-    // Output
-    signal output commitment;
+    // Verify the merkle path
+    var currentHash = leaf;
     
-    // Hash the secret to create nullifier
-    component nullifierHasher = Poseidon(1);
-    nullifierHasher.inputs[0] <== secret;
-    nullifierHash === nullifierHasher.out;
-    
-    // Hash the secret with fixed value to create commitment
-    component commitmentHasher = Poseidon(2);
-    commitmentHasher.inputs[0] <== secret;
-    commitmentHasher.inputs[1] <== 1; // Fixed deposit identifier
-    commitment <== commitmentHasher.out;
-    
-    // Verify merkle path (simplified for education)
-    var computedPath = commitment;
     for (var i = 0; i < depth; i++) {
-        // This is simplified - real circuit would have proper hash
-        computedPath = pathIndices[i] == 0 
-            ? computedPath + pathElements[i] 
-            : pathElements[i] + computedPath;
+        // This is simplified for education
+        // Production uses proper hash function
+        component hasher = Poseidon(2);
+        
+        // Depending on path index, order changes
+        if (pathIndices[i] == 0) {
+            // Left child
+            hasher.inputs[0] <== currentHash;
+            hasher.inputs[1] <== siblings[i];
+        } else {
+            // Right child
+            hasher.inputs[0] <== siblings[i];
+            hasher.inputs[1] <== currentHash;
+        }
+        
+        currentHash = hasher.out;
     }
     
-    // Final check (simplified)
-    root === computedPath;
+    // Final hash should match root
+    root === currentHash;
 }
 
-// Main circuit - depth 4 for education (production would use 20+)
+// Basic withdrawal circuit
 template BasicWithdraw() {
+    // Public inputs (on-chain)
     signal input root;
-    signal input nullifierHash;
+    signal input nullifier;
     
+    // Private inputs (user knows)
     signal input secret;
     signal input pathIndices[4];
-    signal input pathElements[4];
-    signal input leafIndex;
+    signal input siblings[4];
+    signal input recipientHash; // Obfuscated recipient
     
+    // Outputs (verified in proof)
     signal output commitment;
+    signal output nullifierHash;
     
-    component tree = MerkleTreeInclusion(4);
+    // 1. Verify secret creates correct nullifier
+    component nullifierHasher = Poseidon(2);
+    nullifierHasher.inputs[0] <== secret;
+    nullifierHasher.inputs[1] <== 1; // Fixed salt for education
     
-    tree.root <== root;
-    tree.nullifierHash <== nullifierHash;
-    tree.secret <== secret;
+    // Nullifier must match public input
+    nullifier === nullifierHasher.out;
+    nullifierHash <== nullifierHasher.out;
+    
+    // 2. Recreate commitment from secret
+    component commitmentHasher = Poseidon(3);
+    commitmentHasher.inputs[0] <== secret;
+    commitmentHasher.inputs[1] <== 100; // Fixed amount for education
+    commitmentHasher.inputs[2] <== 123; // Fixed randomness
+    
+    commitment <== commitmentHasher.out;
+    
+    // 3. Verify merkle inclusion
+    component merkleProof = MerkleInclusionProof(4);
+    merkleProof.leaf <== commitment;
+    merkleProof.root <== root;
     
     for (var i = 0; i < 4; i++) {
-        tree.pathIndices[i] <== pathIndices[i];
-        tree.pathElements[i] <== pathElements[i];
+        merkleProof.pathIndices[i] <== pathIndices[i];
+        merkleProof.siblings[i] <== siblings[i];
     }
     
-    tree.leafIndex <== leafIndex;
-    commitment <== tree.commitment;
+    // 4. Educational constraints
+    secret != 0;
+    
+    recipientHash != 0;
 }
 
-component main = BasicWithdraw();
+component main { public [ root, nullifier ] } = BasicWithdraw();
