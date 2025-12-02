@@ -1,9 +1,9 @@
-# 📚 ZK Privacy Circuits - Educational Examples
+#  ZK Privacy Circuits - Educational Examples
 
  **Educational Purposes Only**  
  A collection of simplified ZK circuits demonstrating basic privacy concepts. These examples are for learning and should not be used in production.
 
-## 🎯 Purpose
+##  Purpose
 
 This repository contains educational circuit examples to help developers understand:
 - Basic zero-knowledge proof constructions
@@ -11,7 +11,7 @@ This repository contains educational circuit examples to help developers underst
 - Merkle tree inclusion proofs
 - Circuit constraint systems
 
-## 📁 Repository Contents
+##  Repository Contents
 
 
 circuits-eductaional:starknet/
@@ -24,7 +24,7 @@ scripts/
 └── test_circuit.js           # Testing utilities
 
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 # Install dependencies
